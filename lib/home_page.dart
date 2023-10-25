@@ -33,6 +33,17 @@ class _HomePageState extends State<HomePage> {
   String _toMeasures = 'Kilometers';
   String _results = "";
 
+  final Map<String, int> _measuresMap = {
+    'Meters': 0,
+    'Kilometers': 1,
+    'Grams': 2,
+    'Kilograms': 3,
+    'Feet': 4,
+    'Miles': 5,
+    'Pounds': 6,
+    'Ounces': 7,
+  };
+
 // ignore: slash_for_doc_comments
 /**
   // Measurement type | Conversion factors
@@ -66,7 +77,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             TextField(
-              decoration: const InputDecoration(labelText: 'Enter the value'),
+              decoration: const InputDecoration(
+                labelText: 'Enter the value',
+              ),
               onChanged: (value) {
                 setState(() {
                   _value = double.parse(value);
@@ -146,6 +159,23 @@ class _HomePageState extends State<HomePage> {
   void _convert() {
     if (kDebugMode) {
       print('Clicked');
+      print(_value);
+    }
+
+    if (_value != 0 && _fromMeasures.isNotEmpty && _toMeasures.isNotEmpty) {
+      int? from = _measuresMap[_fromMeasures];
+      int? to = _measuresMap[_toMeasures];
+
+      var multiplier = _formulas[from.toString()][to];
+
+      setState(() {
+        _results =
+            "$_value $_fromMeasures = ${_value * multiplier} $_toMeasures";
+      });
+    } else {
+      setState(() {
+        _results = "Enter a non-zero value";
+      });
     }
   }
 }
